@@ -46,6 +46,24 @@ namespace Main.FinalCharacterController
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ToggleSprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""faeeda7d-2e32-4fee-a4f2-4130967a6f93"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleFirstPerson"",
+                    ""type"": ""Button"",
+                    ""id"": ""76092ea4-5677-4192-9539-70a115eefd8f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -169,6 +187,28 @@ namespace Main.FinalCharacterController
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0f1dddc5-90f9-447d-9316-1bbe28dbe659"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleSprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d608be39-54ef-40be-8ff1-b0c246496e19"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleFirstPerson"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -179,6 +219,8 @@ namespace Main.FinalCharacterController
             m_PlayerMovementMap = asset.FindActionMap("PlayerMovementMap", throwIfNotFound: true);
             m_PlayerMovementMap_Movement = m_PlayerMovementMap.FindAction("Movement", throwIfNotFound: true);
             m_PlayerMovementMap_Look = m_PlayerMovementMap.FindAction("Look", throwIfNotFound: true);
+            m_PlayerMovementMap_ToggleSprint = m_PlayerMovementMap.FindAction("ToggleSprint", throwIfNotFound: true);
+            m_PlayerMovementMap_ToggleFirstPerson = m_PlayerMovementMap.FindAction("ToggleFirstPerson", throwIfNotFound: true);
         }
 
         ~@PlayerControlls()
@@ -247,12 +289,16 @@ namespace Main.FinalCharacterController
         private List<IPlayerMovementMapActions> m_PlayerMovementMapActionsCallbackInterfaces = new List<IPlayerMovementMapActions>();
         private readonly InputAction m_PlayerMovementMap_Movement;
         private readonly InputAction m_PlayerMovementMap_Look;
+        private readonly InputAction m_PlayerMovementMap_ToggleSprint;
+        private readonly InputAction m_PlayerMovementMap_ToggleFirstPerson;
         public struct PlayerMovementMapActions
         {
             private @PlayerControlls m_Wrapper;
             public PlayerMovementMapActions(@PlayerControlls wrapper) { m_Wrapper = wrapper; }
             public InputAction @Movement => m_Wrapper.m_PlayerMovementMap_Movement;
             public InputAction @Look => m_Wrapper.m_PlayerMovementMap_Look;
+            public InputAction @ToggleSprint => m_Wrapper.m_PlayerMovementMap_ToggleSprint;
+            public InputAction @ToggleFirstPerson => m_Wrapper.m_PlayerMovementMap_ToggleFirstPerson;
             public InputActionMap Get() { return m_Wrapper.m_PlayerMovementMap; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -268,6 +314,12 @@ namespace Main.FinalCharacterController
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
+                @ToggleSprint.started += instance.OnToggleSprint;
+                @ToggleSprint.performed += instance.OnToggleSprint;
+                @ToggleSprint.canceled += instance.OnToggleSprint;
+                @ToggleFirstPerson.started += instance.OnToggleFirstPerson;
+                @ToggleFirstPerson.performed += instance.OnToggleFirstPerson;
+                @ToggleFirstPerson.canceled += instance.OnToggleFirstPerson;
             }
 
             private void UnregisterCallbacks(IPlayerMovementMapActions instance)
@@ -278,6 +330,12 @@ namespace Main.FinalCharacterController
                 @Look.started -= instance.OnLook;
                 @Look.performed -= instance.OnLook;
                 @Look.canceled -= instance.OnLook;
+                @ToggleSprint.started -= instance.OnToggleSprint;
+                @ToggleSprint.performed -= instance.OnToggleSprint;
+                @ToggleSprint.canceled -= instance.OnToggleSprint;
+                @ToggleFirstPerson.started -= instance.OnToggleFirstPerson;
+                @ToggleFirstPerson.performed -= instance.OnToggleFirstPerson;
+                @ToggleFirstPerson.canceled -= instance.OnToggleFirstPerson;
             }
 
             public void RemoveCallbacks(IPlayerMovementMapActions instance)
@@ -299,6 +357,8 @@ namespace Main.FinalCharacterController
         {
             void OnMovement(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
+            void OnToggleSprint(InputAction.CallbackContext context);
+            void OnToggleFirstPerson(InputAction.CallbackContext context);
         }
     }
 }
